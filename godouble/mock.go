@@ -123,6 +123,7 @@ func (c *mockedMethodCall) spy(args []interface{}) ([]interface{}, error) {
 }
 
 func (c *mockedMethodCall) verify(t T) {
+	t.Helper()
 	if !c.met() {
 		t.Errorf("%v expected %v, found %d calls", c.stubbedMethodCall, c.expect, c.count)
 	}

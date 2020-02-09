@@ -25,6 +25,7 @@ func defaults(d *TestDouble) {
 	d.SetReturnValuesIntegration(integrateReturnValues)
 	d.SetDefaultReturnValues(defaultReturnValues)
 	d.SetDefaultCall(defaultCall)
+	d.EnableTrace()
 }
 func defaultCall(m Method) MethodCall {
 	return m.Mock().Expect(Never())

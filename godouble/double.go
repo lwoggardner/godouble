@@ -88,6 +88,10 @@ func (d *TestDouble) EnableTrace() {
 	d.trace = true
 }
 
+func (d *TestDouble) DisableTrace() {
+	d.trace = false
+}
+
 /*
 SetDefaultCall allows caller to provide a function to decide whether to Stub, Mock, Spy or Fake
 a call that was not explicitly registered in Setup phase.
@@ -316,6 +320,7 @@ func (d *TestDouble) Fake(methodName string, impl interface{}) (fake FakeMethodC
 }
 
 func (d *TestDouble) Verify() {
+	d.t.Helper()
 	for _, method := range d.methods {
 		for _, methodCall := range method.calls {
 			methodCall.verify(d.t)

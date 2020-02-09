@@ -235,6 +235,7 @@ func TestTestDouble_Spy(t *testing.T) {
 	doubleT.Mock("Errorf").Matching(printfMatcher(`hello`)).Expect(Once())
 	doubleT.Fake("Fatalf", doubleT.FakeFatalf)
 	doubleT.Stub("Helper")
+	doubleT.Stub("Logf")
 
 	d1 := newApiDouble(doubleT)
 
