@@ -38,18 +38,22 @@ type apiDouble struct {
 }
 
 func (a *apiDouble) call(in string) int {
+	a.TestDouble.T().Helper()
 	return a.Invoke("call", in)[0].(int)
 }
 
 func (a *apiDouble) other() int {
+	a.TestDouble.T().Helper()
 	return a.Invoke("other")[0].(int)
 }
 
 func (a *apiDouble) empty() {
+	a.TestDouble.T().Helper()
 	a.Invoke("empty")
 }
 
 func (a *apiDouble) test(i int, s string) (r int, e error) {
+	a.TestDouble.T().Helper()
 	returns := a.Invoke("test", i, s)
 	r, _ = returns[0].(int)
 	e, _ = returns[1].(error)
@@ -57,10 +61,12 @@ func (a *apiDouble) test(i int, s string) (r int, e error) {
 }
 
 func (a *apiDouble) variadic(i int, s ...string) {
+	a.TestDouble.T().Helper()
 	a.Invoke("test", i, s)
 }
 
 func (a *apiDouble) pointers(i *int, s *string) {
+	a.TestDouble.T().Helper()
 	a.Invoke("test", i, s)
 }
 

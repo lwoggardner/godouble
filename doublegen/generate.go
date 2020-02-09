@@ -175,6 +175,7 @@ const MethodTemplate = `
     {{- /*gotype: github.com/lwoggardner/godouble/doublegen.Method*/ -}}
 {{- $variadic := .VariadicArg -}}
 func (d *{{.TypeName}}) {{.Name}}({{range $i, $a := .Args}} i{{$i}} {{if eq $variadic $i}}...{{packager $a.Elem}}{{else}}{{packager $a}},{{end}}{{end}}) ({{range $i, $o := .Returns}}r{{$i}} {{packager $o}},{{end}}) {
+    d.TestDouble.T().Helper()
     {{if .Returns}}returns := {{end}}d.TestDouble.Invoke("{{.Name}}"{{range $i, $a := .Args}},i{{$i}}{{end}})
 {{- range $i,$o := .Returns }}
     r{{$i}}, _ = returns[{{$i}}].({{packager $o}})

@@ -117,6 +117,7 @@ func (c *mockedMethodCall) matches(args []interface{}) bool {
 func (c *mockedMethodCall) spy(args []interface{}) ([]interface{}, error) {
 	c.count++
 	if c.trace() && c.complete() {
+		c.t().Helper()
 		c.t().Logf("%v completed expectations after %d calls", c, c.count)
 	}
 	return c.stubbedMethodCall.spy(args)
