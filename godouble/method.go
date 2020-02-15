@@ -107,7 +107,7 @@ func (m *method) invoke(args []interface{}) []interface{} {
 		//A fake method can panic but we still want to trace it
 		defer func(matched MethodCall, args []interface{}) {
 			if e := recover(); e != nil {
-				m.t().Logf("Invoked %s(%v) => panic! %v", matched, args, e)
+				m.t().Logf("Called %s(%v) => panic! %v", matched, args, e)
 				panic(e)
 			}
 		}(matched, args)
@@ -118,7 +118,7 @@ func (m *method) invoke(args []interface{}) []interface{} {
 		m.t().Fatalf("No return values available for method %v(%v) %s", matched, args, err.Error())
 	} else {
 		if m.trace() {
-			m.t().Logf("Invoked %s(%v) => %v", matched, args, returns)
+			m.t().Logf("Called %s(%v) => %v", matched, args, returns)
 		}
 		AssertMethodReturnValues(m.t(), m.m, returns) //Safe but slow?
 	}

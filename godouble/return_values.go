@@ -43,10 +43,10 @@ type multiValues interface {
 	multiValued() bool
 }
 
-// A Sleeper can be used to simulate a sleep, eg when testing using a fake clock.
+// A Timewarp can be used to simulate a sleep, eg when testing using a fake clock.
 // The canonical sleeper is
 //   time.After
-type Sleeper func(d time.Duration) <-chan time.Time
+type Timewarp func(d time.Duration) <-chan time.Time
 
 func NewReturnsForMethod(t T, forMethod reflect.Method, values ...interface{}) (rv ReturnValues) {
 	if len(values) == 1 {
@@ -117,7 +117,7 @@ type ReturnChannel interface {
 
 	//Set a timeout. If the timeout expires before a Value is available on the channel
 	//  ( via Send() ) the test will fail fatally.
-	SetTimeout(timeout time.Duration, sleeper ...Sleeper)
+	SetTimeout(timeout time.Duration, sleeper ...Timewarp)
 
 	ReturnValues
 }
@@ -149,7 +149,7 @@ type returnChannel struct {
 	method  reflect.Method
 	values  chan []interface{}
 	timeout time.Duration
-	sleeper Sleeper
+	sleeper Timewarp
 }
 
 func (rc *returnChannel) ForMethod(t T, method reflect.Method) {
@@ -186,7 +186,7 @@ func (rc *returnChannel) Close() {
 }
 
 //Max time to wait for a Value from the channel before failing the test
-func (rc *returnChannel) SetTimeout(timeout time.Duration, sleeper ...Sleeper) {
+func (rc *returnChannel) SetTimeout(timeout time.Duration, sleeper ...Timewarp) {
 	if len(sleeper) > 0 {
 		rc.sleeper = sleeper[0]
 	}
@@ -196,10 +196,10 @@ func (rc *returnChannel) SetTimeout(timeout time.Duration, sleeper ...Sleeper) {
 type delayedReturnValues struct {
 	ReturnValues
 	delayer func() time.Duration
-	sleeper Sleeper
+	sleeper Timewarp
 }
 
-func newDelayedReturnValues(rv ReturnValues, f func() time.Duration, sleeper ...Sleeper) ReturnValues {
+func newDelayedReturnValues(rv ReturnValues, f func() time.Duration, sleeper ...Timewarp) ReturnValues {
 	sf := time.After
 	if len(sleeper) > 0 {
 		sf = sleeper[0]
@@ -225,12 +225,12 @@ func (d delayedReturnValues) ForMethod(t T, method reflect.Method) {
 // while waiting for the response.
 //
 // An optional sleeper function, defaulting to time.Sleep, can be provided. eg for use with fake clock
-func Delayed(rv ReturnValues, by time.Duration, sleep ...Sleeper) ReturnValues {
+func Delayed(rv ReturnValues, by time.Duration, sleep ...Timewarp) ReturnValues {
 	return newDelayedReturnValues(rv, func() time.Duration { return by }, sleep...)
 }
 
 // RandDelayed wraps the ReturnValues rv with a delay of up to 'max' duration
-func RandDelayed(rv ReturnValues, max time.Duration, sleep ...Sleeper) ReturnValues {
+func RandDelayed(rv ReturnValues, max time.Duration, sleep ...Timewarp) ReturnValues {
 	return newDelayedReturnValues(rv, func() time.Duration { return time.Duration(rand.Int63n(int64(max))) }, sleep...)
 }
 

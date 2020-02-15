@@ -263,7 +263,7 @@ func TestTestDouble_Spy(t *testing.T) {
 
 	spy := d1.Spy("call")
 	spy.Expect(Exactly(3))
-	assertMatch(t, spy, "all calls.*call")
+	assertMatch(t, spy, "call")
 
 	calls := spy.Matching("hello")
 	calls.Expect(AtLeast(1)) //should mean doubleT gets Errorf as this expectation

@@ -68,11 +68,6 @@ func (iface *Interface) SetType(packageName string, typeName string) {
 
 func (iface Interface) GenerateDouble(writer io.Writer) {
 	t := template.New("Generate")
-	t.Funcs(
-		template.FuncMap{
-			"packager": func(v interface{}) string {
-				return iface.packager(v)
-			}})
 	iface.ParseTemplates(t)
 	template.Must(t.Parse(GenerateTemplate))
 	err := t.Execute(writer, iface)
@@ -98,6 +93,11 @@ func (iface Interface) packager(typeWithPkgIface interface{}) string {
 }
 
 func (iface Interface) ParseTemplates(t *template.Template) {
+	t.Funcs(
+		template.FuncMap{
+			"packager": func(v interface{}) string {
+				return iface.packager(v)
+			}})
 	template.Must(t.Parse(DoubleTemplate))
 	template.Must(t.Parse(MethodTemplate))
 	template.Must(t.Parse(PackageHeaderTemplate))

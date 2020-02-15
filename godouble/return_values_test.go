@@ -140,7 +140,7 @@ func TestReturnChannel(t *testing.T) {
 		name     string
 		toSend   []interface{}
 		method   reflect.Method
-		sleeper  Sleeper
+		sleeper  Timewarp
 		buffered bool
 	}
 

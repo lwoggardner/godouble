@@ -200,7 +200,7 @@ func (c *spyMethodCall) After(recordedCalls RecordedCalls) RecordedCalls {
 func newSpyMethodCall(m *method, subsets ...string) *spyMethodCall {
 
 	if len(subsets) == 0 {
-		subsets = []string{fmt.Sprintf("all calls to %v", m)}
+		subsets = []string{m.String()}
 	}
 
 	call := &spyMethodCall{
